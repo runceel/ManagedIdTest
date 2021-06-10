@@ -14,35 +14,25 @@ using System.Text;
 
 namespace ManagedIdTest
 {
-    public static class Function1
+    public class Function1
     {
+        private readonly BlobServiceClient _blobServiceClient;
+
+        public Function1(BlobServiceClient blobServiceClient)
+        {
+            _blobServiceClient = blobServiceClient;
+        }
+
         [FunctionName("Function1")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var blobName = $"{Guid.NewGuid()}.txt";
-            await CreateBlockBlobAsync("stkaotaoutput", "fromfunctionapp", blobName);
-
-            return new OkObjectResult($"{blobName} was created.");
-        }
-
-        async static Task CreateBlockBlobAsync(string accountName, string containerName, string blobName)
-        {
-            // Construct the blob container endpoint from the arguments.
-            var containerEndpoint = $"https://{accountName}.blob.core.windows.net/{containerName}";
-
-            // Get a credential and create a client object for the blob container.
-            var containerClient = new BlobContainerClient(
-                new Uri(containerEndpoint),
-                new DefaultAzureCredential());
-
-            // Create the container if it does not exist.
+            var containerClient = _blobServiceClient.GetBlobContainerClient("sample");
             await containerClient.CreateIfNotExistsAsync();
-
-            // Upload text to a new block blob.
+            var blobName = $"{Guid.NewGuid()}.txt";
             var blobContents = "This is a block blob.";
             var byteArray = Encoding.ASCII.GetBytes(blobContents);
 
@@ -50,6 +40,8 @@ namespace ManagedIdTest
             {
                 await containerClient.UploadBlobAsync(blobName, stream);
             }
+
+            return new OkObjectResult($"{blobName} was created.");
         }
     }
 }
