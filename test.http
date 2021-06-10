@@ -1,1 +1,4 @@
 GET http://localhost:7071/api/Function1
+
+###
+GET https://func-managedid.azurewebsites.net/api/Function1?code=MVK492YGThJT7Hf1J7GTwnM9ZJ98cv0Bc9ePTXlpxnt/iaqzH9AzVQ==

@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
-    <UserSecretsId>032e139d-0871-46ba-aabe-c7267215d9a1</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.4.0" />
